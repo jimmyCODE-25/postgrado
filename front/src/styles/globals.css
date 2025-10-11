@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+#root {
+  @apply flex flex-col min-h-dvh h-full bg-gradient-to-br from-indigo-50 via-indigo-50 to-indigo-50;
+}

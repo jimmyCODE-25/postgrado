@@ -1,0 +1,65 @@
+# Entorno virtual
+venv/
+ENV/
+env/
+.venv/
+
+# Archivos de Python compilados
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de entorno y configuración local
+.env
+*.sqlite3
+*.log
+
+# Archivos de migración (opcional, si no querés compartirlos aún)
+**/migrations/
+!**/migrations/__init__.py
+
+# Archivos de usuario y estáticos generados
+media/
+staticfiles/
+
+# Configuración de IDEs
+.vscode/
+.idea/
+*.swp
+
+# Archivos temporales
+*.tmp
+*.bak
+*.orig
+*.~ 
+
+# Archivos de dependencias
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos de cobertura de tests
+htmlcov/
+.coverage
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Archivos de compilación
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Archivos de Docker (si usás)
+*.pid
+*.db
+*.tar
+*.gz
+*.tgz
+*.zip
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
