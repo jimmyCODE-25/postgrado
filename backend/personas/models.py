@@ -17,6 +17,8 @@ class Persona(models.Model):
     
     def __str__(self):
         return f"{self.nombres} {self.apellidos}"
+    
+    #Planformacion
 
 class PlanFormacion(models.Model):
     id_pf = models.AutoField(primary_key=True)
@@ -41,4 +43,33 @@ class PlanFormacion(models.Model):
     
     def __str__(self):
         return f"{self.nombre} (v{self.n_version})"
-# Create your models here.
+
+    #Actividad
+    
+class Actividad(models.Model):
+    id_act = models.AutoField(primary_key=True)
+    id_acp = models.IntegerField(null=True, blank=True)
+    id_pr = models.IntegerField(null=True, blank=True)
+    n_actividad = models.IntegerField(null=True, blank=True)
+    categ_programatica = models.CharField(max_length=255, unique=True)
+    id_ue = models.IntegerField(null=True, blank=True)
+    descripcion = models.CharField(max_length=500, blank=True, null=True)
+    tipo = models.CharField(max_length=100, blank=True, null=True)
+    clase = models.CharField(max_length=100, blank=True, null=True)
+    unidad_medida = models.CharField(max_length=100, blank=True, null=True)
+    fecha_ini = models.DateField(null=True, blank=True)
+    fecha_final = models.DateField(null=True, blank=True)
+    doc_verif = models.CharField(max_length=500, blank=True, null=True)
+    causas_desv = models.CharField(max_length=500, blank=True, null=True)
+    estado = models.IntegerField(default=1)
+    
+    class Meta:
+        db_table = 'actividad'
+        verbose_name = 'Actividad'
+        verbose_name_plural = 'Actividades'
+        ordering = ['-fecha_ini']
+    
+    def __str__(self):
+        return f"{self.categ_programatica} - {self.descripcion}"
+
+

@@ -2,7 +2,7 @@ import graphene
 import logging
 from datetime import datetime
 from graphene_django import DjangoObjectType
-from .models import Persona, PlanFormacion
+from .models import Persona, PlanFormacion, Actividad
 
 logger = logging.getLogger(__name__)
 #persona
@@ -17,14 +17,24 @@ class PlanFormacionType(DjangoObjectType):
         model = PlanFormacion
         fields = '__all__'
         
-        
+#actividad
+class ActividadType(DjangoObjectType):
+    class Meta:
+        model = Actividad
+        fields = '__all__'
+              
 class Query(graphene.ObjectType):
+    # Queries para Persona
     all_personas = graphene.List(PersonaType)
     persona_by_id = graphene.Field(PersonaType, idpersona=graphene.ID(required=True))
     
     # Queries para PlanFormacion
     all_planes_formacion = graphene.List(PlanFormacionType)
     plan_formacion_by_id = graphene.Field(PlanFormacionType, id_pf=graphene.ID(required=True))
+    
+    #Queries para actividad
+    all_actividades = graphene.List(ActividadType)
+    actividad_by_id = graphene.Field(ActividadType, id_act=graphene.Int(required=True))
     
     #personas
     def resolve_all_personas(self, info):
@@ -47,6 +57,16 @@ class Query(graphene.ObjectType):
             return PlanFormacion.objects.get(id_pf=pk_value)
         except (PlanFormacion.DoesNotExist, ValueError):
             return None
+        
+    #actividad
+    def resolve_all_actividades(self, info):
+        return Actividad.objects.all()
+    
+    def resolve_actividad_by_id(self, info, id_act):
+        try:
+            return Actividad.objects.get(id_act=id_act)
+        except Actividad.DoesNotExist:
+            return None   
         
         
 def parse_date(value):
@@ -235,7 +255,94 @@ class DeletePlanFormacion(graphene.Mutation):
             logger.warning(f"Intento de eliminar PlanFormacion con id {id_pf} que no existe.")
             return DeletePlanFormacion(success=False)       
 
+#actividad
+class CreateActividad(graphene.Mutation):
+    class Arguments:
+        categ_programatica = graphene.String(required=True)
+        descripcion = graphene.String()
+        id_acp = graphene.Int()
+        id_pr = graphene.Int()
+        n_actividad = graphene.Int()
+        id_ue = graphene.Int()
+        tipo = graphene.String()
+        clase = graphene.String()
+        unidad_medida = graphene.String()
+        fecha_ini = graphene.Date()
+        fecha_final = graphene.Date()
+        doc_verif = graphene.String()
+        causas_desv = graphene.String()
+        estado = graphene.Int()
+    
+    actividad = graphene.Field(ActividadType)
+    
+    def mutate(self, info, categ_programatica, **kwargs):
+        actividad = Actividad(
+            categ_programatica=categ_programatica,
+            descripcion=kwargs.get('descripcion'),
+            id_acp=kwargs.get('id_acp'),
+            id_pr=kwargs.get('id_pr'),
+            n_actividad=kwargs.get('n_actividad'),
+            id_ue=kwargs.get('id_ue'),
+            tipo=kwargs.get('tipo'),
+            clase=kwargs.get('clase'),
+            unidad_medida=kwargs.get('unidad_medida'),
+            fecha_ini=kwargs.get('fecha_ini'),
+            fecha_final=kwargs.get('fecha_final'),
+            doc_verif=kwargs.get('doc_verif'),
+            causas_desv=kwargs.get('causas_desv'),
+            estado=kwargs.get('estado', 1)
+        )
+        actividad.save()
+        return CreateActividad(actividad=actividad)
 
+
+class UpdateActividad(graphene.Mutation):
+    class Arguments:
+        id_act = graphene.Int(required=True)
+        categ_programatica = graphene.String()
+        descripcion = graphene.String()
+        id_acp = graphene.Int()
+        id_pr = graphene.Int()
+        n_actividad = graphene.Int()
+        id_ue = graphene.Int()
+        tipo = graphene.String()
+        clase = graphene.String()
+        unidad_medida = graphene.String()
+        fecha_ini = graphene.Date()
+        fecha_final = graphene.Date()
+        doc_verif = graphene.String()
+        causas_desv = graphene.String()
+        estado = graphene.Int()
+    
+    actividad = graphene.Field(ActividadType)
+    
+    def mutate(self, info, id_act, **kwargs):
+        try:
+            actividad = Actividad.objects.get(id_act=id_act)
+            for key, value in kwargs.items():
+                if value is not None:
+                    setattr(actividad, key, value)
+            actividad.save()
+            return UpdateActividad(actividad=actividad)
+        except Actividad.DoesNotExist:
+            return None
+
+
+class DeleteActividad(graphene.Mutation):
+    class Arguments:
+        id_act = graphene.Int(required=True)
+    
+    success = graphene.Boolean()
+    
+    def mutate(self, info, id_act):
+        try:
+            actividad = Actividad.objects.get(id_act=id_act)
+            actividad.delete()
+            return DeleteActividad(success=True)
+        except Actividad.DoesNotExist:
+            return DeleteActividad(success=False)
+        
+        
 class Mutation(graphene.ObjectType):
     create_persona = CreatePersona.Field()
     update_persona = UpdatePersona.Field()
@@ -245,6 +352,10 @@ class Mutation(graphene.ObjectType):
     create_plan_formacion = CreatePlanFormacion.Field()
     update_plan_formacion = UpdatePlanFormacion.Field()
     delete_plan_formacion = DeletePlanFormacion.Field()
-
+    
+    # Mutations de Actividad
+    create_actividad = CreateActividad.Field()
+    update_actividad = UpdateActividad.Field()
+    delete_actividad = DeleteActividad.Field()
 schema = graphene.Schema(query=Query, mutation=Mutation)
 
