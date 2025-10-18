@@ -2,12 +2,18 @@ import { CREATE_PERSONA } from "@/graphql/mutations";
 import { GET_ALL_PERSONAS } from "@/graphql/queries";
 import type { PersonaProps } from "@/types/Persona";
 import { useMutation } from "@apollo/client/react";
-import { UserPlusIcon } from "lucide-react";
 import { useState } from "react";
-import Button from "./Button";
 import ErrorMessage from "./ErrorMessage";
-import FormHeader from "./FormHeader";
 import InputField from "./InputField";
+import { Boton } from "./ui/Boton";
+import { Dialogo, DialogoContenido, DialogoDisparador } from "./ui/dialogo";
+import {
+  Tarjeta,
+  TarjetaContenido,
+  TarjetaDescripcion,
+  TarjetaEncabezado,
+  TarjetaTitulo,
+} from "./ui/tarjeta";
 
 const initialFormState = {
   nombres: "",
@@ -63,71 +69,80 @@ export default function PersonaForm() {
   };
 
   return (
-    <div className="min-w-sm p-8 border border-indigo-200 rounded-2xl bg-white shadow-xl">
-      <FormHeader
-        title="Crear Nueva Persona"
-        subtitle="Complete los datos del nuevo registro"
-        icon={<UserPlusIcon className="size-8 text-white" />}
-      />
+    <Dialogo>
+      <DialogoDisparador>Crear nueva persona</DialogoDisparador>
+      <DialogoContenido mostrarBotonCerrar>
+        <Tarjeta>
+          <TarjetaEncabezado>
+            <TarjetaTitulo>Crear Nueva Persona</TarjetaTitulo>
+            <TarjetaDescripcion>
+              Complete los datos del nuevo registro
+            </TarjetaDescripcion>
+          </TarjetaEncabezado>
+          <TarjetaContenido>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <InputField
+                label="Nombres"
+                name="nombres"
+                placeholder="Ingrese los nombres"
+                value={formData.nombres}
+                onChange={handleChange}
+                isRequired
+              />
+              <InputField
+                label="Apellidos"
+                name="apellidos"
+                placeholder="Ingrese los apellidos"
+                value={formData.apellidos}
+                onChange={handleChange}
+                isRequired
+              />
+              <InputField
+                label="Email"
+                name="email"
+                type="email"
+                placeholder="ejemplo@correo.com"
+                value={formData.email}
+                onChange={handleChange}
+                isRequired
+              />
+              <InputField
+                label="Teléfono"
+                name="telefono"
+                placeholder="+591 70123456"
+                value={formData.telefono || ""}
+                onChange={handleChange}
+              />
+              <InputField
+                label="Dirección"
+                name="direccion"
+                placeholder="Calle, número, ciudad"
+                value={formData.direccion || ""}
+                onChange={handleChange}
+              />
+              <InputField
+                label="Fecha de Nacimiento"
+                name="fechaNacimiento"
+                type="date"
+                value={
+                  formData.fechaNacimiento
+                    ? new Date(formData.fechaNacimiento)
+                        .toISOString()
+                        .split("T")[0]
+                    : ""
+                }
+                onChange={handleChange}
+              />
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <InputField
-          label="Nombres"
-          name="nombres"
-          placeholder="Ingrese los nombres"
-          value={formData.nombres}
-          onChange={handleChange}
-          isRequired
-        />
-        <InputField
-          label="Apellidos"
-          name="apellidos"
-          placeholder="Ingrese los apellidos"
-          value={formData.apellidos}
-          onChange={handleChange}
-          isRequired
-        />
-        <InputField
-          label="Email"
-          name="email"
-          type="email"
-          placeholder="ejemplo@correo.com"
-          value={formData.email}
-          onChange={handleChange}
-          isRequired
-        />
-        <InputField
-          label="Teléfono"
-          name="telefono"
-          placeholder="+591 70123456"
-          value={formData.telefono || ""}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Dirección"
-          name="direccion"
-          placeholder="Calle, número, ciudad"
-          value={formData.direccion || ""}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Fecha de Nacimiento"
-          name="fechaNacimiento"
-          type="date"
-          value={
-            formData.fechaNacimiento
-              ? new Date(formData.fechaNacimiento).toISOString().split("T")[0]
-              : ""
-          }
-          onChange={handleChange}
-        />
+              <Boton type="submit" isLoading={loading}>
+                {loading ? " Creando..." : "Crear Persona"}
+              </Boton>
 
-        <Button type="submit" isLoading={loading}>
-          {loading ? " Creando..." : "Crear Persona"}
-        </Button>
-
-        {error && <ErrorMessage message={error.message} />}
-      </form>
-    </div>
+              {error && <ErrorMessage message={error.message} />}
+            </form>
+          </TarjetaContenido>
+        </Tarjeta>
+      </DialogoContenido>
+    </Dialogo>
   );
 }

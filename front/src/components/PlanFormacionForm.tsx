@@ -2,13 +2,19 @@ import { CREATE_PLAN_FORMACION } from "@/graphql/mutations";
 import { GET_ALL_PLANES_FORMACION } from "@/graphql/queries";
 import type { PlanFormacionProps } from "@/types/PlanFormacion";
 import { useMutation } from "@apollo/client/react";
-import { BookPlusIcon } from "lucide-react";
 import { useState } from "react";
-import Button from "./Button";
 import ErrorMessage from "./ErrorMessage";
-import FormHeader from "./FormHeader";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
+import { Boton } from "./ui/Boton";
+import { Dialogo, DialogoContenido, DialogoDisparador } from "./ui/dialogo";
+import {
+  Tarjeta,
+  TarjetaContenido,
+  TarjetaDescripcion,
+  TarjetaEncabezado,
+  TarjetaTitulo,
+} from "./ui/tarjeta";
 
 const initialFormState: Omit<PlanFormacionProps, "idPf"> = {
   nombre: "",
@@ -72,7 +78,7 @@ export default function PlanFormacionForm() {
     }
 
     const variables = {
-      ...formData,
+      nombre: formData.nombre,
       nVersion: Number(formData.nVersion) || null,
       nivelAcad: Number(formData.nivelAcad),
       totalCred: Number(formData.totalCred) || null,
@@ -90,146 +96,170 @@ export default function PlanFormacionForm() {
   };
 
   return (
-    <div className="min-w-sm p-8 border border-indigo-200 rounded-2xl bg-white shadow-xl">
-      <FormHeader
-        title="Crear Nuevo Plan de Formación"
-        subtitle="Complete los datos del nuevo registro"
-        icon={<BookPlusIcon className="size-8 text-white" />}
-      />
+    <Dialogo>
+      <DialogoDisparador>Crear Nuevo Plan de Formación</DialogoDisparador>
+      <DialogoContenido mostrarBotonCerrar>
+        <Tarjeta>
+          <TarjetaEncabezado>
+            <TarjetaTitulo>Crear Nuevo Plan de Formación</TarjetaTitulo>
+            <TarjetaDescripcion>
+              Complete los datos del nuevo registro
+            </TarjetaDescripcion>
+          </TarjetaEncabezado>
+          <TarjetaContenido>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <InputField
+                label="Nombre del Plan"
+                name="nombre"
+                placeholder="Ej: Ingeniería de Sistemas"
+                value={formData.nombre}
+                onChange={handleChange}
+                isRequired
+              />
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <InputField
-          label="Nombre del Plan"
-          name="nombre"
-          placeholder="Ej: Ingeniería de Sistemas"
-          value={formData.nombre}
-          onChange={handleChange}
-          isRequired
-        />
-        <InputField
-          label="Versión"
-          name="nVersion"
-          type="number"
-          placeholder="Ej: 2023"
-          value={formData.nVersion || ""}
-          onChange={handleChange}
-        />
-        <SelectField
-          label="Nivel Académico"
-          name="nivelAcad"
-          value={formData.nivelAcad || ""}
-          onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              nivelAcad: parseInt(e.target.value, 10),
-            }))
-          }
-          isRequired
-          options={[
-            { value: 1, label: "Técnico" },
-            { value: 2, label: "Licenciatura" },
-            { value: 3, label: "Maestría" },
-            { value: 4, label: "Doctorado" },
-          ]}
-        />
-        <InputField
-          label="Total Créditos"
-          name="totalCred"
-          type="number"
-          placeholder="Ej: 300"
-          value={formData.totalCred || ""}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Total Periodos"
-          name="totalPeriodo"
-          type="number"
-          placeholder="Ej: 10"
-          value={formData.totalPeriodo || ""}
-          onChange={handleChange}
-        />
-        <SelectField
-          label="Tipo de Carrera"
-          name="tipoCarr"
-          value={formData.tipoCarr || ""}
-          onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              tipoCarr: parseInt(e.target.value, 10),
-            }))
-          }
-          isRequired
-          options={[
-            { value: 1, label: "Anual" },
-            { value: 2, label: "Semestral" },
-          ]}
-        />
-        <InputField
-          label="Fecha de Creación"
-          name="fechaCreacion"
-          type="date"
-          value={
-            formData.fechaCreacion
-              ? new Date(formData.fechaCreacion).toISOString().split("T")[0]
-              : ""
-          }
-          onChange={handleChange}
-        />
-        <InputField
-          label="Resolución de Alta"
-          name="nResolAlta"
-          placeholder="Ej: HCU-123/2023"
-          value={formData.nResolAlta || ""}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Fecha de Baja"
-          name="fechaBaja"
-          type="date"
-          value={
-            formData.fechaBaja
-              ? new Date(formData.fechaBaja).toISOString().split("T")[0]
-              : ""
-          }
-          onChange={handleChange}
-        />
-        <InputField
-          label="Resolución de Baja"
-          name="nResolBaja"
-          placeholder="Ej: HCU-050/2028"
-          value={formData.nResolBaja || ""}
-          onChange={handleChange}
-        />
-        <InputField
-          label="Descripción"
-          name="descripcion"
-          placeholder="Detalles adicionales del plan de formación"
-          value={formData.descripcion || ""}
-          onChange={handleChange}
-        />
-        <SelectField
-          label="Estado"
-          name="estado"
-          value={formData.estado || ""}
-          onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              estado: parseInt(e.target.value, 10),
-            }))
-          }
-          isRequired
-          options={[
-            { value: 1, label: "Activo" },
-            { value: 2, label: "Inactivo" },
-          ]}
-        />
+              <InputField
+                label="Versión"
+                name="nVersion"
+                type="number"
+                placeholder="Ej: 2023"
+                value={formData.nVersion || ""}
+                onChange={handleChange}
+              />
 
-        <Button type="submit" isLoading={loading}>
-          {loading ? " Creando..." : "Crear Plan de Formación"}
-        </Button>
+              <div className="grid grid-cols-2 gap-4">
+                <SelectField
+                  label="Nivel Académico"
+                  name="nivelAcad"
+                  value={formData.nivelAcad || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      nivelAcad: parseInt(e.target.value, 10),
+                    }))
+                  }
+                  isRequired
+                  options={[
+                    { value: 1, label: "Técnico" },
+                    { value: 2, label: "Licenciatura" },
+                    { value: 3, label: "Maestría" },
+                    { value: 4, label: "Doctorado" },
+                  ]}
+                />
 
-        {error && <ErrorMessage message={error.message} />}
-      </form>
-    </div>
+                <SelectField
+                  label="Tipo de Carrera"
+                  name="tipoCarr"
+                  value={formData.tipoCarr || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      tipoCarr: parseInt(e.target.value, 10),
+                    }))
+                  }
+                  isRequired
+                  options={[
+                    { value: 1, label: "Anual" },
+                    { value: 2, label: "Semestral" },
+                  ]}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <InputField
+                  label="Total Créditos"
+                  name="totalCred"
+                  type="number"
+                  placeholder="Ej: 300"
+                  value={formData.totalCred || ""}
+                  onChange={handleChange}
+                />
+
+                <InputField
+                  label="Total Periodos"
+                  name="totalPeriodo"
+                  type="number"
+                  placeholder="Ej: 10"
+                  value={formData.totalPeriodo || ""}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <InputField
+                label="Fecha de Creación"
+                name="fechaCreacion"
+                type="date"
+                value={
+                  formData.fechaCreacion
+                    ? new Date(formData.fechaCreacion)
+                        .toISOString()
+                        .split("T")[0]
+                    : ""
+                }
+                onChange={handleChange}
+              />
+
+              <InputField
+                label="Resolución de Alta"
+                name="nResolAlta"
+                placeholder="Ej: HCU-123/2023"
+                value={formData.nResolAlta || ""}
+                onChange={handleChange}
+              />
+
+              <InputField
+                label="Fecha de Baja"
+                name="fechaBaja"
+                type="date"
+                value={
+                  formData.fechaBaja
+                    ? new Date(formData.fechaBaja).toISOString().split("T")[0]
+                    : ""
+                }
+                onChange={handleChange}
+              />
+
+              <InputField
+                label="Resolución de Baja"
+                name="nResolBaja"
+                placeholder="Ej: HCU-050/2028"
+                value={formData.nResolBaja || ""}
+                onChange={handleChange}
+              />
+
+              <InputField
+                label="Descripción"
+                name="descripcion"
+                placeholder="Detalles adicionales del plan de formación"
+                value={formData.descripcion || ""}
+                onChange={handleChange}
+              />
+
+              <SelectField
+                label="Estado"
+                name="estado"
+                value={formData.estado || ""}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    estado: parseInt(e.target.value, 10),
+                  }))
+                }
+                isRequired
+                options={[
+                  { value: 1, label: "Activo" },
+                  { value: 2, label: "Inactivo" },
+                ]}
+              />
+
+              <Boton type="submit" isLoading={loading}>
+                {loading ? "Creando..." : "Crear Plan de Formación"}
+              </Boton>
+
+              {error && <ErrorMessage message={error.message} />}
+            </form>
+          </TarjetaContenido>
+        </Tarjeta>
+      </DialogoContenido>
+    </Dialogo>
   );
 }
