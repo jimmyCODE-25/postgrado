@@ -176,3 +176,122 @@ export const DELETE_PLAN_FORMACION = gql`
     }
   }
 `;
+
+// MUTATIONS PARA ACTIVIDAD
+export const CREATE_ACTIVIDAD = gql`
+  mutation CreateActividad(
+    $idAcp: Int
+    $idPr: Int
+    $nActividad: Int
+    $categProgramatica: String!
+    $idUe: Int
+    $descripcion: String
+    $tipo: String
+    $clase: String
+    $unidadMedida: String
+    $fechaIni: Date
+    $fechaFinal: Date
+    $docVerif: String
+    $causasDesv: String
+    $estado: Int!
+  ) {
+    createActividad(
+      idAcp: $idAcp
+      idPr: $idPr
+      nActividad: $nActividad
+      categProgramatica: $categProgramatica
+      idUe: $idUe
+      descripcion: $descripcion
+      tipo: $tipo
+      clase: $clase
+      unidadMedida: $unidadMedida
+      fechaIni: $fechaIni
+      fechaFinal: $fechaFinal
+      docVerif: $docVerif
+      causasDesv: $causasDesv
+      estado: $estado
+    ) {
+      actividad {
+        idAct
+        idAcp
+        idPr
+        nActividad
+        categProgramatica
+        idUe
+        descripcion
+        tipo
+        clase
+        unidadMedida
+        fechaIni
+        fechaFinal
+        docVerif
+        causasDesv
+        estado
+      }
+    }
+  }
+`;
+
+export const UPDATE_ACTIVIDAD = gql`
+  mutation UpdateActividad(
+    $idAct: ID!
+    $idAcp: Int
+    $idPr: Int
+    $nActividad: Int
+    $categProgramatica: String
+    $idUe: Int
+    $descripcion: String
+    $tipo: String
+    $clase: String
+    $unidadMedida: String
+    $fechaIni: Date
+    $fechaFinal: Date
+    $docVerif: String
+    $causasDesv: String
+    $estado: Int
+  ) {
+    updateActividad(
+      idAct: $idAct
+      idAcp: $idAcp
+      idPr: $idPr
+      nActividad: $nActividad
+      categProgramatica: $categProgramatica
+      idUe: $idUe
+      descripcion: $descripcion
+      tipo: $tipo
+      clase: $clase
+      unidadMedida: $unidadMedida
+      fechaIni: $fechaIni
+      fechaFinal: $fechaFinal
+      docVerif: $docVerif
+      causasDesv: $causasDesv
+      estado: $estado
+    ) {
+      actividad {
+        idAct
+        idAcp
+        idPr
+        nActividad
+        categProgramatica
+        idUe
+        descripcion
+        tipo
+        clase
+        unidadMedida
+        fechaIni
+        fechaFinal
+        docVerif
+        causasDesv
+        estado
+      }
+    }
+  }
+`;
+
+export const DELETE_ACTIVIDAD = gql`
+  mutation DeleteActividad($idAct: ID!) {
+    deleteActividad(idAct: $idAct) {
+      success
+    }
+  }
+`;

@@ -35,3 +35,24 @@ export const GET_ALL_PLANES_FORMACION = gql`
   }
 `;
 
+export const GET_ALL_ACTIVIDADES = gql`
+  query GetAllActividades {
+    allActividades {
+      idAct
+      idAcp
+      idPr
+      nActividad
+      categProgramatica
+      idUe
+      descripcion
+      tipo
+      clase
+      unidadMedida
+      fechaIni
+      fechaFinal
+      docVerif
+      causasDesv
+      estado
+    }
+  }
+`;
