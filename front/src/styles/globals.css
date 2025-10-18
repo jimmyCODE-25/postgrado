@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-fondo: hsl(0, 0%, 100%);
+  --color-acentado: hsl(222.2, 84%, 4.9%);
+  --color-primario: hsl(221.2, 83.2%, 53.3%);
+  --color-primario-acentado: hsl(221.2, 40%, 98%);
+  --color-secundario: hsl(0, 72.2%, 50.6%);
+  --color-secundario-acentado: hsl(0, 85.7%, 97.3%);
+  --color-destructivo: hsl(0, 84.2%, 60.2%);
+  --color-mutado: hsl(210, 40%, 96.1%);
+  --color-mutado-acentado: hsl(222.2, 47.4%, 11.2%);
+}
+
 #root {
   @apply flex flex-col min-h-dvh h-full bg-gradient-to-br from-indigo-50 via-indigo-50 to-indigo-50;
+}
+
+* {
+  ::-webkit-scrollbar {
+    @apply size-2;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primario hover:bg-secundario rounded-full;
+  }
 }
