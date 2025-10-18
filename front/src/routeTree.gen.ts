@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as Plan_formacionIndexRouteImport } from './routes/plan_formacion/index'
 import { Route as PersonaIndexRouteImport } from './routes/persona/index'
+import { Route as ActividadIndexRouteImport } from './routes/actividad/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,33 +29,42 @@ const PersonaIndexRoute = PersonaIndexRouteImport.update({
   path: '/persona/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ActividadIndexRoute = ActividadIndexRouteImport.update({
+  id: '/actividad/',
+  path: '/actividad/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/actividad': typeof ActividadIndexRoute
   '/persona': typeof PersonaIndexRoute
   '/plan_formacion': typeof Plan_formacionIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/actividad': typeof ActividadIndexRoute
   '/persona': typeof PersonaIndexRoute
   '/plan_formacion': typeof Plan_formacionIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/actividad/': typeof ActividadIndexRoute
   '/persona/': typeof PersonaIndexRoute
   '/plan_formacion/': typeof Plan_formacionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/persona' | '/plan_formacion'
+  fullPaths: '/' | '/actividad' | '/persona' | '/plan_formacion'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/persona' | '/plan_formacion'
-  id: '__root__' | '/' | '/persona/' | '/plan_formacion/'
+  to: '/' | '/actividad' | '/persona' | '/plan_formacion'
+  id: '__root__' | '/' | '/actividad/' | '/persona/' | '/plan_formacion/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ActividadIndexRoute: typeof ActividadIndexRoute
   PersonaIndexRoute: typeof PersonaIndexRoute
   Plan_formacionIndexRoute: typeof Plan_formacionIndexRoute
 }
@@ -82,11 +92,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PersonaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/actividad/': {
+      id: '/actividad/'
+      path: '/actividad'
+      fullPath: '/actividad'
+      preLoaderRoute: typeof ActividadIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ActividadIndexRoute: ActividadIndexRoute,
   PersonaIndexRoute: PersonaIndexRoute,
   Plan_formacionIndexRoute: Plan_formacionIndexRoute,
 }
